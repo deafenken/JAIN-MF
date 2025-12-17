@@ -1,0 +1,65 @@
+# JAIN-MF Configuration File
+
+# Dataset Configuration
+data_root: "data/NTU_RGB_D_120"
+num_frames: 32
+spatial_size: [224, 224]
+batch_size: 16
+num_workers: 4
+
+# Model Configuration
+num_classes: 120
+feature_dim: 512
+dropout_rate: 0.5
+use_s3a: true
+
+# S3A Module Configuration
+s3a:
+  num_subspaces: 10
+  sparsity_weight: 0.1
+
+# CorrNet Configuration
+corrnet:
+  num_heads: 8
+  num_layers: 2
+
+# Training Configuration
+learning_rate: 1e-3
+weight_decay: 1e-4
+num_epochs: 100
+lr_step_size: 30
+lr_gamma: 0.1
+
+# Loss Weights
+lambda_ce: 1.0  # Cross-entropy loss weight
+lambda_s3a: 0.1  # S3A alignment loss weight
+
+# Data Augmentation
+missing_modalities_prob:
+  rgb: 0.0
+  flow: 0.0
+  skeleton: 0.0
+
+modality_drop_rate: 0.1  # Random modality dropout for training
+
+# Output Directory
+output_dir: "results"
+
+# GPU Configuration
+gpu_id: 0
+
+# Checkpoint Configuration
+save_interval: 10  # Save checkpoint every N epochs
+max_checkpoints: 5  # Maximum number of checkpoints to keep
+
+# Evaluation Configuration
+test_missing_modalities: false
+missing_rates: [0.1, 0.3, 0.5]  # Missing modality rates for testing
+
+# Logging Configuration
+log_interval: 50  # Log every N batches
+tensorboard: true
+
+# Visualization Configuration
+save_attention_maps: true
+attention_sample_interval: 100  # Save attention maps every N batches
