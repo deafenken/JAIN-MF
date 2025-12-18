@@ -46,13 +46,13 @@ class SkeletonGuidedS3A(nn.Module):
         B, T, J, C = skeleton_data.shape
 
         # Flatten skeleton data
-        skeleton_flat = skeleton_data.view(B * T, -1)  # (B*T, J*C)
+        skeleton_flat = skeleton_data.reshape(B * T, -1)  # (B*T, J*C)
 
         # Project to feature space
         skeleton_features = self.skeleton_proj(skeleton_flat)  # (B*T, feature_dim)
 
         # Reshape back
-        skeleton_features = skeleton_features.view(B, T, self.feature_dim)
+        skeleton_features = skeleton_features.reshape(B, T, self.feature_dim)
 
         return skeleton_features
 
@@ -62,10 +62,10 @@ class SkeletonGuidedS3A(nn.Module):
         B, T, H, W, C = features.shape
 
         # Reshape features for processing
-        features_flat = features.view(B * T * H * W, C)  # (N, C)
+        features_flat = features.reshape(B * T * H * W, C)  # (N, C)
         skeleton_features_expanded = skeleton_features.unsqueeze(2).unsqueeze(2)  # (B, T, 1, 1, C)
         skeleton_features_expanded = skeleton_features_expanded.expand(-1, -1, H, W, -1)  # (B, T, H, W, C)
-        skeleton_features_flat = skeleton_features_expanded.view(B * T * H * W, C)  # (N, C)
+        skeleton_features_flat = skeleton_features_expanded.reshape(B * T * H * W, C)  # (N, C)
 
         # Initialize representation coefficients
         N = features_flat.shape[0]
@@ -119,7 +119,7 @@ class SkeletonGuidedS3A(nn.Module):
 
         # Reconstruct using sparse coefficients
         reconstructed = torch.mm(coeffs, self.dictionary)  # (N, C)
-        reconstructed = reconstructed.view(B, T, H, W, C)
+        reconstructed = reconstructed.reshape(B, T, H, W, C)
 
         # Apply reconstruction layer
         reconstructed = self.reconstruction_layer(reconstructed)
@@ -137,8 +137,8 @@ class SkeletonGuidedS3A(nn.Module):
         skeleton_features_expanded = skeleton_features_expanded.expand(-1, -1, H, W, -1)
 
         # Compute attention between RGB and skeleton features
-        rgb_flat = features.view(B * T * H * W, C).unsqueeze(1)  # (N, 1, C)
-        skeleton_flat = skeleton_features_expanded.view(B * T * H * W, C).unsqueeze(1)  # (N, 1, C)
+        rgb_flat = features.reshape(B * T * H * W, C).unsqueeze(1)  # (N, 1, C)
+        skeleton_flat = skeleton_features_expanded.reshape(B * T * H * W, C).unsqueeze(1)  # (N, 1, C)
 
         aligned_features, attention_weights = self.skeleton_attention(
             rgb_flat, skeleton_flat, skeleton_flat

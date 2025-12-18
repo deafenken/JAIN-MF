@@ -72,14 +72,3 @@ python scripts/test.py --config configs/config.yaml --checkpoint checkpoints/bes
 ```bash
 python scripts/extract_features.py --config configs/config.yaml
 ```
-
-## Citation
-```
-@inproceedings{jain2024jain,
-  title={JAIN-MF: Tri-Modal Action Recognition via Skeleton-Guided Sparse Subspace Alignment},
-  author={Jain, Ashish and Sridhar, Yashwanth Aluru and Radhakrishnan, Vineeth N and Balasubramanian, Vineeth N},
-  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
-  pages={5298--5307},
-  year={2024}
-}
-```
